@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BOOKSAPI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+    <style>
+        .card-text {
+            display: none;
+        }
+
+        .show-description .card-text {
+            display: block;
+        }
+
+        body {
+            background-color: antiquewhite;
+        }
+
+        nav {
+            background-color: rgb(237, 184, 212);
+        }
+        .head {
+          color:black;
+          font-family:fantasy;
+          text-align: center;
+          padding-top: 3%;
+          padding-left: 4%;
+        }
+    </style>
+</head>
+
+<body>
+  <h3 class="head"> Top 15 most popular books in a Months of 2020</h3>
+    <div class="container mt-5">
+        <div class="row" id="appendData"></div>
+    </div>
+
+    <script>
+        const toggleDescription = (event) => {
+            event.currentTarget.classList.toggle("show-description");
+        };
+
+        const getData = () => {
+            fetch(
+                "https://hapi-books.p.rapidapi.com/month/2022/03", {
+                    method: "GET",
+                    headers: {
+                        "x-rapidapi-host": "hapi-books.p.rapidapi.com",
+                        "x-rapidapi-key": "e0fda3bda5msh668c9213e09589fp1db21cjsn0950310c2580", // Replace with your RapidAPI key
+                    },
+                }
+            )
+                .then((res) => res.json())
+                .then((data) => {
+                    data.forEach((value, index, arr1) => {
+                        console.log(value);
+
+                        let wrapper = document.createElement("div");
+                        wrapper.className = "card col-md-3 m-3";
+                        wrapper.style.width = "18rem";
+
+                        let cardImage = document.createElement("img");
+                        cardImage.className = "card-img-top";
+                        cardImage.src = value.cover;
+
+                        let cardBody = document.createElement("div");
+                        cardBody.className = "card-body";
+
+                        let title = document.createElement("h5");
+                        title.className = "card-title";
+                        title.textContent = value.name;
+
+                        let position = document.createElement("p");
+                        position.className = "card-text";
+                        position.textContent = "Position: " + value.position;
+
+                        let rating = document.createElement("p");
+                        rating.className = "card-text";
+                        rating.textContent = "Rating: " + value.rating;
+
+                        let bookId = document.createElement("p");
+                        bookId.className = "card-text";
+                        bookId.textContent = "Book ID: " + value.book_id;
+
+                        let description = document.createElement("div");
+                        description.className = "card-text";
+                        description.textContent = value.description;
+
+                        cardBody.appendChild(title);
+                        cardBody.appendChild(position);
+                        cardBody.appendChild(rating);
+                        cardBody.appendChild(bookId);
+                        cardBody.appendChild(description);
+
+                        wrapper.appendChild(cardImage);
+                        wrapper.appendChild(cardBody);
+
+                        wrapper.addEventListener("click", toggleDescription);
+
+                        document.getElementById("appendData").appendChild(wrapper);
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
+        };
+        // Wait for the DOM to load before calling getData()
+        window.addEventListener("DOMContentLoaded", getData);
+    </script>
+</body>
+
+</html>
